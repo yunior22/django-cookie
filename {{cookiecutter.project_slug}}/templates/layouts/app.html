@@ -1,0 +1,35 @@
+<!-- Load DjangoMix tag -->
+{% raw %}{% load mix %}{% endraw %}
+<!-- Load Django Static tag -->
+{% raw %}{% load static %}{% endraw %}
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta http-equiv="X-UA-Compatible" content="ie=edge" />
+    <meta name="author" content="{{ cookiecutter.author_name }}" />
+
+    <!-- Favicon -->
+    <link rel="icon" href="{% raw %}{% static 'assets/favicons/favicon.ico' %}{% endraw %}" />
+
+    <title>
+      {% raw %}{% block title %}{% endblock %}{% endraw %} | {{ cookiecutter.project_name }}
+    </title>
+
+    <!-- Fonts -->
+    <link rel="stylesheet" href="https://rsms.me/inter/inter.css" />
+
+    <!-- Styles -->
+    <link rel="stylesheet" href="{% raw %}{% mix 'css/app.css' 'static' %}{% endraw %}" />
+
+    <!-- Scripts -->
+    <script src="{% raw %}{% mix 'js/app.js' 'static' %}{% endraw %}" defer></script>
+  </head>
+  <body>
+    <main>
+      <!-- Content -->
+      {% raw %}{% block content %}{% endblock %}{% endraw %}
+    </main>
+  </body>
+</html>
