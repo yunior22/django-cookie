@@ -41,7 +41,7 @@ First make sure you have [Cookiecutter](https://cookiecutter.readthedocs.io/en/1
 Create you project by running the following command:
 
 ```
-cookiecutter https://github.com/yunior-dev/django-cookie
+cookiecutter https://github.com/yunior22/django-cookie
 ```
 
 ```
