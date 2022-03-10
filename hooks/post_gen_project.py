@@ -89,7 +89,7 @@ def remove_async_files():
         os.remove(file_name)
 
 
-def gen_django_secret_key(file_path):
+def gen_django_secret_key():
     """Generates a 32-bit hex key."""
     for x in range(1):
         key = secrets.token_hex(32)
