@@ -1,0 +1,73 @@
+version: '3'
+
+networks:
+  django:
+    name: django
+
+services:
+  web:
+    build:
+      context: .
+      dockerfile: docker/local/python.dockerfile
+    container_name: web
+    depends_on:
+      - psql
+    ports:
+      - "8000:8000"
+    volumes:
+      - .:/usr/src/web:delegated
+    command: >
+      sh -c "python manage.py wait_for_db && python manage.py runserver 0.0.0.0:8000"
+    env_file:
+      - .env
+    networks:
+      - django
+
+  psql:
+    image: postgres:14.2-alpine
+    container_name: psql
+    ports:
+      - "5432:5432"
+    volumes:
+      - ./docker/local/postgres/data:/var/lib/postgresql/data/
+    restart: always
+    tty: true
+    environment:
+      POSTGRES_DB: django_db
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: secret
+    networks:
+      - django
+
+  redis:
+    image: redis:latest
+    container_name: redis
+    restart: unless-stopped
+    ports:
+      - "6379:6379"
+    networks:
+      - django
+
+  python:
+    build:
+      context: .
+      dockerfile: docker/local/python.dockerfile
+    container_name: python
+    volumes:
+      - .:/usr/src/web:delegated
+    working_dir: /usr/src/web
+    env_file:
+      - .env
+    entrypoint: [ 'python', 'manage.py' ]
+    networks:
+      - django
+
+  yarn:
+    image: node:current-alpine
+    container_name: yarn
+    volumes:
+      - .:/usr/src/web:delegated
+    working_dir: /usr/src/web
+    entrypoint: [ 'yarn' ]
+    networks:
+      - django

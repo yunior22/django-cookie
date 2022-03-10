@@ -1,5 +1,5 @@
-from .base import *  # noqa
-from .base import env
+from config.settings import *  # noqa
+from config.settings import env
 
 # GENERAL
 # ------------------------------------------------------------------------------
@@ -59,5 +59,5 @@ TEMPLATES[-1]['OPTIONS']['loaders'] = [  # type: ignore[index] # noqa F405
 ADMIN_URL = env('DJANGO_ADMIN_URL')
 
 
-# Your stuff...
+# Your production settings...
 # ------------------------------------------------------------------------------

@@ -4,11 +4,11 @@
   "description": "{{ cookiecutter.project_name }} app source code.",
   "author_name": "Yunior Espinal",
   "domain_name": "example.com",
+  "enviroment": ["Docker", "Pipenv"],
   "database": ["PostgreSQL", "SQLite3"],
   "use_async": "n",
   "use_vuejs": "n",
-  "use_whitenoise": "y",
-  "use_heroku": "y",
-  "read_dot_env_file": "y",
+  "use_whitenoise": "n",
+  "use_heroku": "n",
   "debug": "y"
 }

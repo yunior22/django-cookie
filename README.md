@@ -4,7 +4,7 @@
 
 Powered by [Cookiecutter](https://github.com/cookiecutter/cookiecutter), Django-Cookie is a template for jumpstarting Django projects quickly.
 
-My version is inspire by Daniel Roy Greenfeld's [cookiecutter-django](https://github.com/pydanny/cookiecutter-django). This cookiecutter is opinionated and barebone and contains less features.
+My version is inspire by Daniel Roy Greenfeld's [cookiecutter-django](https://github.com/pydanny/cookiecutter-django). This cookiecutter is super opinionated, barebone, and contains less features.
 
 ---
 
@@ -157,6 +157,10 @@ This is you!
 
 The domain name you plan to use for your project once it goes live. Note that it can be safely changed later on whenever you need to.
 
+##### enviroment:
+
+Select a development / production enviroment.
+
 ##### database:
 
 Select a database to use, choises are PostgreSQL and SQLite3:
@@ -177,15 +181,15 @@ Indicates whether the project should be configured to use WhiteNoise\*.
 
 Indicates whether the project should be configured so as to be deployable to Heroku\*.
 
-##### read_dot_env_file:
-
-Indicates whether the project to use a local .env file.
-
 ##### debug:
 
 Indicates whether the project should be configured for debugging.
 
 ---
+
+### Docker Deployment
+
+TBD
 
 ## Heroku Deployment
 

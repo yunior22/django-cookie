@@ -9,9 +9,9 @@ Pillow==9.0.1               # https://github.com/python-pillow/Pillow
 # ------------------------------------------------------------------------------
 
 Django>=3.2,<3.3            # Django - https://www.djangoproject.com/
-django-environ>=0.4.5,<1.0  # Django evironment - https://github.com/joke2k/django-environ
+django-environ>=0.4.5,<1.0  # Django environment - https://github.com/joke2k/django-environ
 djangomix>=1.1.3,<3.2       # DjangoMix - https://github.com/m-a-k-o/django-mix
-psycopg2>=2.8.6,<2.9        # Database adapter - # https://github.com/psycopg/psycopg2
+psycopg2>=2.9.1,<2.10       # Database adapter - # https://github.com/psycopg/psycopg2
 {%- if cookiecutter.use_whitenoise == "y" %}
 whitenoise>=5.2.0,<5.3      # Simplified static file serving - # http://whitenoise.evans.io/en/stable/
 {%- endif %}

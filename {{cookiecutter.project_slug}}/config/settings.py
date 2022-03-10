@@ -1,11 +1,12 @@
 """
-Base settings to build other settings file upon.
+Default settings to build other settings file upon.
 """
 from pathlib import Path
 
+import environ
 from django.conf.locale.en import formats as en_formats
 
-import environ
+from settings.apps import VENDOR_LOCAL_APPS
 
 ROOT_DIR = Path(__file__).resolve(strict=True).parent.parent
 
@@ -56,6 +57,7 @@ WSGI_APPLICATION = 'config.wsgi.application'
 
 
 # APPS
+# SEE settings/apps.py TO REGISTER VENDOR AND LOCAL APPS.
 # ------------------------------------------------------------------------------
 DJANGO_APPS = [
     'django.contrib.admin',
@@ -67,20 +69,8 @@ DJANGO_APPS = [
     'django.contrib.staticfiles',
     # 'django.contrib.humanize', # Handy template tags
 ]
-VENDOR_APPS = [
-    'djangomix',
-    # Third party apps go here.
-]
-LOCAL_APPS = [
-    {%- if cookiecutter.use_vuejs == "y" %}
-    'apps.client',
-    {%- endif %}
-    'apps.core',
-    # 'apps.users',
-    # Your apps: custom apps go here.
-]
 # https://docs.djangoproject.com/en/dev/ref/settings/#installed-apps
-INSTALLED_APPS = DJANGO_APPS + VENDOR_APPS + LOCAL_APPS
+INSTALLED_APPS = DJANGO_APPS + VENDOR_LOCAL_APPS
 
 
 # PASSWORDS
@@ -142,8 +132,6 @@ STATICFILES_FINDERS = [
     'django.contrib.staticfiles.finders.FileSystemFinder',
     'django.contrib.staticfiles.finders.AppDirectoriesFinder',
 ]
-
-STATIC_URL = '/static/'
 
 {%- if cookiecutter.use_whitenoise == "y" %}
 # WHITENOISE STORAGE
@@ -225,7 +213,3 @@ DEFAULT_AUTO_FIELD = 'django.db.models.AutoField'
 
 # Replace the default user model with the custom model.
 # AUTH_USER_MODEL = 'core.User'
-
-
-# Your stuff...
-# ------------------------------------------------------------------------------

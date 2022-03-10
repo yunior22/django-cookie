@@ -2,8 +2,8 @@ from __future__ import print_function
 
 import os
 import random
+import secrets
 import shutil
-import string
 
 try:
     # Inspired by
@@ -34,6 +34,20 @@ def remove_vue_related_directories():
     shutil.rmtree(os.path.join('resources', 'vue'))
 
 
+def remove_docker_files():
+    file_names = [
+        'docker-compose.yml',
+        'docker-compose.prod.yml'
+    ]
+    for file_name in file_names:
+        os.remove(file_name)
+    remove_docker_related_directories()
+
+
+def remove_docker_related_directories():
+    shutil.rmtree(os.path.join('docker'))
+
+
 def remove_non_vue_files():
     file_names = [
         os.path.join('templates', 'welcome.html')
@@ -45,6 +59,20 @@ def remove_non_vue_files():
 
 def remove_none_vue_related_directories():
     shutil.rmtree(os.path.join('templates', 'layouts'))
+
+
+def remove_pipfile():
+    file_names = ['Pipfile']
+    for file_name in file_names:
+        os.remove(file_name)
+
+
+def remove_gitkeep_files():
+    file_names = [
+        os.path.join('docker', 'local', 'postgres', 'data', '.gitkeep')
+    ]
+    for file_name in file_names:
+        os.remove(file_name)
 
 
 def remove_heroku_files():
@@ -61,76 +89,69 @@ def remove_async_files():
         os.remove(file_name)
 
 
-def generate_random_string(
-    length, using_digits=False, using_ascii_letters=False, using_punctuation=False
-):
-    """
-    Example:
-        opting out for 50 symbol-long, [a-z][A-Z][0-9] string
-        would yield log_2((26+26+50)^50) ~= 334 bit strength.
-    """
-    if not using_sysrandom:
-        return None
-
-    symbols = []
-    if using_digits:
-        symbols += string.digits
-    if using_ascii_letters:
-        symbols += string.ascii_letters
-    if using_punctuation:
-        all_punctuation = set(string.punctuation)
-        # These symbols can cause issues in environment variables
-        unsuitable = {"'", '"', "\\", "$"}
-        suitable = all_punctuation.difference(unsuitable)
-        symbols += "".join(suitable)
-    return "".join([random.choice(symbols) for _ in range(length)])
+def gen_django_secret_key(file_path):
+    """Generates a 32-bit hex key."""
+    for x in range(1):
+        key = secrets.token_hex(32)
+        return key
 
 
-def set_flag(file_path, flag, value=None, formatted=None, *args, **kwargs):
-    if value is None:
-        random_string = generate_random_string(*args, **kwargs)
-        if random_string is None:
-            print(
-                "We couldn't find a secure pseudo-random number generator on your system. "
-                'Please, make sure to manually {} later.'.format(flag)
-            )
-            random_string = flag
-        if formatted is not None:
-            random_string = formatted.format(random_string)
-        value = random_string
+def set_env_file():
+    file_name = input('Enter a .env file name [defaults to .env] : ')
+    if file_name == '':
+        file_name = '.env'
 
-    with open(file_path, 'r+') as f:
-        file_contents = f.read().replace(flag, value)
-        f.seek(0)
-        f.write(file_contents)
-        f.truncate()
+    while True:
+        q1 = input('Do you want file for: A) development B) production [A/b]? : ')
+        if q1 == 'A' or 'a' or '':
+            app_env = 'development'
+            break
+        elif q1 == 'B' or 'b':
+            app_env = 'production'
+            break
 
-    return value
+    f = open(file_name, 'w')
 
+    app_key = gen_django_secret_key()
 
-def set_django_secret_key(file_path):
-    django_secret_key = set_flag(
-        file_path,
-        '!!!SET DJANGO_SECRET_KEY!!!',
-        length=64,
-        using_digits=True,
-        using_ascii_letters=True,
+    env_string = (
+        'APP_NAME="{{ cookiecutter.project_name }}"\n'
+        "APP_ENV=" + app_env + "\n"
+        "APP_SECRET_KEY=" + app_key + "\n"
+        "APP_DEBUG=True\n"
+        "APP_ALLOWED_HOST="'"localhost, 127.0.0.1, 0.0.0.0"\n\n'
+        "DB_POSTGRESQL="'{%- if cookiecutter.database == "PostgreSQL" -%} psql {% endif %}\n'
+        "DB_HOST=psql\n"
+        "DB_PORT=5432\n"
+        "DB_DATABASE=django_db\n"
+        "DB_USERNAME=postgres\n"
+        "DB_PASSWORD=secret\n\n"
+        "REDIS_HOST=redis\n"
+        "REDIS_PASSWORD=secret\n"
+        "REDIS_PORT=6379\n\n"
+        "MAIL_MAILER=smtp\n"
+        "MAIL_HOST=smtp.mailtrap.io\n"
+        "MAIL_PORT=2525\n"
+        "MAIL_USERNAME=null\n"
+        "MAIL_PASSWORD=null\n"
+        "MAIL_ENCRYPTION=null\n"
+        "MAIL_FROM_ADDRESS=null\n"
+        "MAIL_FROM_NAME=Django\n"
     )
-    return django_secret_key
-
-
-def set_flags_in_envs():
-    django_secret_key_envs_path = os.path.join('.env')
-    set_django_secret_key(django_secret_key_envs_path)
-
-
-def set_flags_in_settings_files():
-    set_django_secret_key(os.path.join('settings', 'development.py'))
+    f.write(env_string)
+    f.close()
 
 
 def main():
-    set_flags_in_envs()
-    set_flags_in_settings_files()
+    set_env_file()
+    print(SUCCESS + 'Env file generated.' + TERMINATOR)
+
+    if '{{ cookiecutter.enviroment }}'.lower() == 'docker':
+        remove_pipfile()
+        remove_gitkeep_files()
+
+    if '{{ cookiecutter.use_vuejs }}'.lower() == 'pipenv':
+        remove_docker_files()
 
     if '{{ cookiecutter.use_vuejs }}'.lower() == 'n':
         remove_vue_files()
