@@ -109,7 +109,7 @@ def set_env_file():
         "APP_SECRET_KEY=" + app_key + "\n"
         "APP_DEBUG=True\n"
         "APP_ALLOWED_HOST="'"localhost, 127.0.0.1, 0.0.0.0"\n\n'
-        "DB_POSTGRESQL="'{%- if cookiecutter.database == "PostgreSQL" -%} psql {% endif %}\n'
+        "DB_ENGINE="'{%- if cookiecutter.database == "PostgreSQL" -%} psql {% endif %}\n'
         "DB_HOST=psql\n"
         "DB_PORT=5432\n"
         "DB_DATABASE=django_db\n"
