@@ -97,18 +97,7 @@ def gen_django_secret_key(file_path):
 
 
 def set_env_file():
-    file_name = input('Enter a .env file name [defaults to .env] : ')
-    if file_name == '':
-        file_name = '.env'
-
-    while True:
-        q1 = input('Do you want file for: A) development B) production [A/b]? : ')
-        if q1 == 'A' or 'a' or '':
-            app_env = 'development'
-            break
-        elif q1 == 'B' or 'b':
-            app_env = 'production'
-            break
+    file_name = '.env'
 
     f = open(file_name, 'w')
 
@@ -116,7 +105,7 @@ def set_env_file():
 
     env_string = (
         'APP_NAME="{{ cookiecutter.project_name }}"\n'
-        "APP_ENV=" + app_env + "\n"
+        "APP_ENV=development\n"
         "APP_SECRET_KEY=" + app_key + "\n"
         "APP_DEBUG=True\n"
         "APP_ALLOWED_HOST="'"localhost, 127.0.0.1, 0.0.0.0"\n\n'
